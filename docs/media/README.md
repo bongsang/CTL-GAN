@@ -4,8 +4,7 @@
 
 The author supplied this short visualization of synthetic eye images for the
 CTL-GAN repository introduction. The original video is preserved without edits.
-It illustrates image generation; it is not a real-patient recording or a timed
-benchmark of the maker CLI. It does not document a diffusion denoising procedure.
+It provides a visual introduction to the generator’s synthetic eye images.
 
 ## Permission
 

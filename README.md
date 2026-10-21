@@ -8,10 +8,11 @@ Generate **512 × 512 synthetic fluorescein-stained anterior segment images**,
 conditioned on an SMC or SYSU model and an Oxford grade from 0 to 5.
 Choose a model, choose a grade, and generate your own images with reproducible seeds.
 
-
 **Watch the generator in action · 8-second demo**
 
-[Watch the original video](docs/media/generating.mp4)
+https://github.com/user-attachments/assets/b12eecfa-55cf-4b7d-bfc0-bede2c17b3bf
+
+[Watch or download the original MP4](docs/media/generating.mp4)
 
 *Copyright © Bongsang Kim. You may use and share this video with author credit and
 [citation of the CTL-GAN paper](https://doi.org/10.1038/s41598-026-76373-4).
