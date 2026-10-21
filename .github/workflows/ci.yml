@@ -1,0 +1,22 @@
+name: Maker checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.13.0'
+          enable-cache: true
+      - run: uv python install
+      - run: uv lock --check
+      # Control-plane checks require only the standard library; no GPU or weights.
+      - run: uv run --no-project --python 3.10.21 -m unittest discover -s tests -v
+      - run: uv run --no-project --python 3.10.21 -m maker --help
+      - run: uv run --no-project --python 3.10.21 -m maker --list-models
+      - run: uvx --python 3.10.21 cffconvert==2.0.0 --validate

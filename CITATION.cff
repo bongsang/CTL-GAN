@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use CTL-GAN, cite the article below and NVIDIA's StyleGAN3 paper."
+title: "CTL-GAN: synthetic dry eye image generation"
+type: software
+version: 0.1.0
+authors:
+  - family-names: Kim
+    given-names: Bongsang
+repository-code: "https://github.com/bongsang/CTL-GAN"
+url: "https://doi.org/10.1038/s41598-026-76373-4"
+preferred-citation:
+  type: article
+  title: "Privacy-preserving collaborative transfer learning with generative adversarial networks (CTL-GAN) for classification of dry eye disease"
+  authors:
+    - family-names: Kim
+      given-names: Bongsang
+    - family-names: Won
+      given-names: Yeo Kyoung
+    - family-names: Kim
+      given-names: Hokyun
+    - family-names: Cha
+      given-names: Jiho
+    - family-names: Lim
+      given-names: Dong Hui
+    - family-names: Jeon
+      given-names: Jooyoung
+  journal: Scientific Reports
+  year: 2026
+  date-published: 2026-10-20
+  doi: 10.1038/s41598-026-76373-4
