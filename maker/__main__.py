@@ -1,4 +1,4 @@
-"""Run with: uv run -m maker --hospital smc --grade 3 --num 100."""
+"""Run with: uv run -m maker --hospital smc --grade 3 --count 100."""
 from __future__ import annotations
 
 import argparse
@@ -38,9 +38,9 @@ def parser():
     p = argparse.ArgumentParser(description="Generate synthetic dry eye images conditioned on hospital model and Oxford grade (0–5).")
     p.add_argument("--hospital", choices=("smc", "sysu"), help="SMC source model or SYSU-adapted model")
     p.add_argument("--grade", type=int, choices=range(6), help="requested Oxford condition, not a verified clinical label")
-    p.add_argument("--num", type=positive, default=1, help="number of images, 1–10000 (default: 1)")
-    p.add_argument("--seed", type=seed_value, default=0, help="first seed; generates seed through seed+num-1")
-    p.add_argument("--trunc", type=trunc_value, default=1.0, help="truncation psi (default: 1.0)")
+    p.add_argument("--count", type=positive, default=1, help="number of images, 1–10000 (default: 1)")
+    p.add_argument("--seed", type=seed_value, default=0, help="first seed; generates seed through seed+count-1")
+    p.add_argument("--trunc", type=trunc_value, default=1.0, help="style distance from the learned mean, 0–2; 1 leaves styles unchanged (default: 1.0)")
     p.add_argument("--device", choices=("auto", "cuda", "cpu"), default="auto")
     p.add_argument("--impl", choices=("ref", "cuda"), default="ref", help="ref needs no compiler; cuda needs a matching CUDA toolkit")
     p.add_argument("--outdir", type=Path, help="new output directory (existing directories are never overwritten)")
@@ -73,8 +73,8 @@ def run(args, p):
         p.error("--hospital is required (or use --list-models / --doctor)")
     if not args.download_only and args.grade is None:
         p.error("--grade is required for generation")
-    if args.seed + args.num - 1 > 2**32 - 1:
-        p.error("seed + num - 1 must not exceed 4294967295")
+    if args.seed + args.count - 1 > 2**32 - 1:
+        p.error("seed + count - 1 must not exceed 4294967295")
     if args.outdir is not None and args.outdir.exists() and not args.download_only:
         raise MakerError(f"Output directory already exists: {args.outdir}. Choose a new --outdir.")
     spec = catalog["models"][args.hospital]
@@ -106,7 +106,7 @@ def run(args, p):
         "requested_oxford_grade": args.grade, "clinically_verified_grade": False,
         "model_id": spec["id"], "model_sha256": spec["sha256"],
         "upstream_commit": catalog["stylegan3_commit"],
-        "seed_start": args.seed, "num_requested": args.num, "truncation_psi": args.trunc,
+        "seed_start": args.seed, "num_requested": args.count, "truncation_psi": args.trunc,
         "device": device, "operator_implementation": args.impl, "precision": "float32",
         "environment": environment(), "images": [],
     }
@@ -115,7 +115,7 @@ def run(args, p):
     started = time.monotonic()
     try:
         with operators(args.impl):
-            for index, seed in enumerate(range(args.seed, args.seed + args.num), 1):
+            for index, seed in enumerate(range(args.seed, args.seed + args.count), 1):
                 pixels = synthesize(generator, args.grade, seed, args.trunc, device)
                 filename = f"{args.hospital}_grade-{args.grade}_seed-{seed:06d}.png"
                 info = PngImagePlugin.PngInfo()
@@ -123,7 +123,7 @@ def run(args, p):
                 Image.fromarray(pixels, "RGB").save(out / filename, pnginfo=info)
                 manifest["images"].append({"filename": filename, "seed": seed, "sha256": sha256(out / filename)})
                 write_manifest(target, manifest)
-                print(f"[{index}/{args.num}] {filename}", flush=True)
+                print(f"[{index}/{args.count}] {filename}", flush=True)
         manifest["status"] = "complete"
     except BaseException:
         manifest["status"] = "interrupted_or_failed"

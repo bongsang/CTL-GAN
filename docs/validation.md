@@ -24,10 +24,10 @@ reproduction of the paper's classifier results or a clinical quality evaluation.
 | Repeat SMC grade 3 / seed 0 in a fresh CLI process | PNG bytes exactly equal |
 | SYSU, grade 3, seeds 0–1 | Two valid PNGs and complete manifest |
 | CPU: SYSU, grade 2, seed 0 | One valid PNG and complete manifest |
-| Ordinary CLI, download and manifest tests | 13 passed |
+| Ordinary CLI, download and manifest tests | 14 passed, including count and truncation argument checks |
 | Public Release download from an empty cache | Both models downloaded without GitHub authentication and passed size/SHA-256 verification |
 | Inference with publicly downloaded weights | SMC: 3 PNGs; SYSU: 1 PNG; complete manifests; SMC seed-0 PNG equals the local-export PNG |
-| GitHub Actions | Locked dependency resolution, 13 tests, CLI help/model list and CFF schema validation passed |
+| GitHub Actions | Locked dependency resolution, 14 tests, CLI help/model list and CFF schema validation passed |
 
 The 100-image SMC loop took **18.316 seconds** on this RTX 4090, including PNG
 and manifest writes, **excluding environment installation, model download,
@@ -37,6 +37,20 @@ performance guarantee or a formal benchmark.
 
 The two original training pickles were used only for local maintainer validation.
 The public inference path uses the exported safetensors files.
+
+## Count and truncation checks
+
+The `--count` interface was checked with the released SMC model on the environment
+above. Seven images were generated: seeds 42–43 at grade 3 with truncation 1.0,
+0.7 and 0.0, plus seed 100 at grade 2 with truncation 0.0. All runs produced the
+requested number of 512×512 RGB images and complete manifests with the expected
+seeds and truncation values.
+
+Seeds 42 and 43 produced different pixel arrays at truncation 1.0. Holding seed 42
+and grade 3 fixed, truncation 0.7 changed the output. At truncation 0.0, all three
+outputs were pixel-identical across the tested seeds and grades, consistent with
+the shared style mean. These checks verify sampling behavior, not image quality.
+The removed `--num` option is rejected by the argument parser.
 
 ## Existing public examples
 
@@ -69,8 +83,8 @@ that every image used in the final paper came from these checkpoint bytes.
 uv sync --locked
 uv run -m unittest discover -s tests -v
 uv run -m maker --doctor
-uv run -m maker --hospital smc --grade 3 --num 100 --outdir outputs/validation-smc
-uv run -m maker --hospital sysu --grade 2 --num 1 --device cpu --outdir outputs/validation-cpu
+uv run -m maker --hospital smc --grade 3 --count 100 --outdir outputs/validation-smc
+uv run -m maker --hospital sysu --grade 2 --count 1 --device cpu --outdir outputs/validation-cpu
 ```
 
 Model files must first be available as described in [models.md](models.md).

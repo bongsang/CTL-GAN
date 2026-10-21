@@ -20,7 +20,7 @@ in these tensor files.
 For manual or offline installation, download the required file into a directory:
 
 ```bash
-uv run -m maker --hospital smc --grade 3 --num 1 --cache-dir /path/to/models --offline
+uv run -m maker --hospital smc --grade 3 --count 1 --cache-dir /path/to/models --offline
 ```
 
 The release also includes provenance JSON, `SHA256SUMS`, and the NVIDIA license.

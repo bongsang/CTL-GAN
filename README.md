@@ -14,33 +14,17 @@ https://github.com/user-attachments/assets/b12eecfa-55cf-4b7d-bfc0-bede2c17b3bf
 
 [Watch or download the original MP4](docs/media/generating.mp4)
 
-**From random numbers to a synthetic eye image.** A seed produces a random latent
-vector—a list of numbers. Together with the requested Oxford grade, it passes
-through a mapping network and a StyleGAN3 synthesis network, which computes the
-image using learned weights. This inference pipeline does not search a photo
-database or assemble retrieved image fragments; it runs without the training
-images. [See the generation pathway and StyleGAN3 references](docs/media/README.md#how-stylegan3-creates-an-image).
-
-The clip makes the variety and continuous changes in synthesized eye images
-visible. It shows generated outputs; the diagram below explains the computation
-behind each image. It is not a recording of intermediate neural-network layers
-or a pixel-noise denoising sequence.
-
-```mermaid
-flowchart LR
-    A["Seed → random latent vector z"] --> B["Mapping network"]
-    C["Oxford grade 0–5"] --> B
-    B --> D["Style codes w"]
-    D --> E["StyleGAN3 synthesis"]
-    E --> F["Synthetic eye image"]
-```
+Images are computed from random latent inputs and learned weights, without
+retrieving or assembling training photographs. The clip shows generated outputs;
+[the generation pathway](docs/media/README.md#how-stylegan3-creates-an-image)
+explains how each image is synthesized.
 
 *Copyright © Bongsang Kim. You may use and share this video with author credit and
 [citation of the CTL-GAN paper](https://doi.org/10.1038/s41598-026-76373-4).
 [Video details and permission](docs/media/README.md).*
 
 ```bash
-uv run -m maker --hospital smc --grade 3 --num 100
+uv run -m maker --hospital smc --grade 3 --count 100
 ```
 
 **[Paper](https://www.nature.com/articles/s41598-026-76373-4)** ·
@@ -50,24 +34,6 @@ uv run -m maker --hospital smc --grade 3 --num 100
 > **Ready to generate:** [SMC and SYSU model weights](https://github.com/bongsang/CTL-GAN/releases/tag/models-v1)
 > download automatically on first use (about 96 MiB per model), then stay cached.
 > No training data or bulk image download is required.
-
-## Overview
-
-CTL-GAN transfers a StyleGAN3 generator trained on Samsung Medical Center (SMC)
-images and adapts it using the Sun Yat-sen University (SYSU) dataset. This repository
-provides a small inference interface around **[NVIDIA's StyleGAN3](https://github.com/NVlabs/stylegan3)**.
-CTL-GAN applies collaborative transfer learning to the StyleGAN3 architecture.
-
-| Model option | Meaning | Output |
-|---|---|---|
-| `--hospital smc` | Generator trained on the SMC dataset | Synthetic SMC-domain images |
-| `--hospital sysu` | Generator adapted from SMC weights using SYSU data | Synthetic SYSU-domain images |
-| `--grade 0` … `--grade 5` | Requested Oxford grading condition | One-hot class conditioning |
-
-These are **generated images**, not photographs retrieved from a hospital. The
-requested grade is a conditioning label, not an independently verified clinical
-grade. SYSU refers to the research dataset associated with Sun Yat-sen University,
-not a live connection to a hospital.
 
 ## Quick start
 
@@ -90,10 +56,10 @@ available for a small trial. Windows/WSL2 and macOS notes are in the
 
    ```bash
    # 100 SMC-domain images, Oxford grade 3, seeds 0–99
-   uv run -m maker --hospital smc --grade 3 --num 100
+   uv run -m maker --hospital smc --grade 3 --count 100
 
    # 10 SYSU-domain images, grade 2, seeds 1000–1009
-   uv run -m maker --hospital sysu --grade 2 --num 10 --seed 1000
+   uv run -m maker --hospital sysu --grade 2 --count 10 --seed 1000
    ```
 
 The default `--device auto` uses CUDA when available. The default `--impl ref`
@@ -117,7 +83,17 @@ Every PNG carries a synthetic-image description. The manifest records the
 checkpoint hash, requested grade, seed, truncation, runtime, image hashes, and
 completion status. Existing output directories are never overwritten.
 
-## More examples
+## Generation options
+
+| Option | Meaning | Default |
+|---|---|---|
+| `--hospital` | SMC or SYSU generator weights | Required |
+| `--grade` | Requested Oxford condition, 0–5 | Required |
+| `--count` | Number of images, 1–10,000 | `1` |
+| `--seed` | Starting seed; each image uses the next seed | `0` |
+| `--trunc` | Style distance from the learned mean, 0–2 | `1.0` |
+
+### Examples
 
 ```bash
 # See model availability and all options
@@ -125,27 +101,47 @@ uv run -m maker --list-models
 uv run -m maker --help
 
 # One image on CPU; useful for trying the interface without an NVIDIA GPU
-uv run -m maker --hospital smc --grade 0 --num 1 --device cpu
+uv run -m maker --hospital smc --grade 0 --count 1 --device cpu
 
 # A chosen new output directory and a different seed range
-uv run -m maker --hospital sysu --grade 4 --num 20 --seed 200 --outdir outputs/my-run
+uv run -m maker --hospital sysu --grade 4 --count 20 --seed 200 --outdir outputs/my-run
 
 # Explore truncation (changes the sampling distribution)
-uv run -m maker --hospital smc --grade 3 --num 4 --trunc 0.7
+uv run -m maker --hospital smc --grade 3 --count 4 --trunc 0.7
 
 # Download and verify a model without generating images
 uv run -m maker --hospital smc --download-only
 
 # Use a pre-populated cache with networking disabled
-uv run -m maker --hospital smc --grade 3 --num 1 --offline --cache-dir /path/to/models
+uv run -m maker --hospital smc --grade 3 --count 1 --offline --cache-dir /path/to/models
 ```
 
-`--seed N --num K` uses independent seeds `N` through `N+K-1`. Reusing the same
+`--seed N --count K` uses independent seeds `N` through `N+K-1`. Reusing the same
 model, seed, grade, truncation, device and software environment gives repeatable
 samples. Different operator implementations or GPU/software versions can change
 pixel values; cross-platform bit-for-bit equality is not promised. Defaults use
-float32 and truncation 1.0. Lower truncation is an exploratory option, not a claim
-of better clinical quality.
+float32 and truncation 1.0.
+
+### Explore truncation
+
+`--trunc` controls how far the generated style lies from the model's learned
+average. `1.0` leaves it unchanged; `0.7` moves it 30% toward the average. Lower
+values reduce variation. The StyleGAN paper describes a potential image-quality
+benefit at the expense of diversity; this is not a validated improvement in
+clinical quality for CTL-GAN. See [StyleGAN, Appendix B](https://arxiv.org/html/1812.04948v3#A2).
+
+Compare the same seed and grade with two settings:
+
+```bash
+uv run -m maker --hospital smc --grade 3 --count 1 --seed 42 --trunc 1.0
+uv run -m maker --hospital smc --grade 3 --count 1 --seed 42 --trunc 0.7
+```
+
+The average is shared across grades. Very low values can weaken grade-dependent
+variation; at `0`, all styles collapse to that average, eliminating seed and grade
+variation within a model. Start with `1.0`; `0.7` is an exploratory comparison.
+[Truncation details and references](docs/sampling.md) explain the calculation and
+values above `1`.
 
 For the upstream compiled CUDA operators, use `--impl cuda` only after installing
 a CUDA toolkit that matches the PyTorch CUDA runtime and a compatible compiler.
@@ -164,6 +160,26 @@ dataset is required for generation. Model weights are cached outside Git.
 
 Numerical comparisons between these examples and current generator outputs are
 reported in the [validation record](docs/validation.md).
+
+## Overview
+
+CTL-GAN transfers a StyleGAN3 generator trained on Samsung Medical Center (SMC)
+images and adapts it using the Sun Yat-sen University (SYSU) dataset. This repository
+provides a small inference interface around **[NVIDIA's StyleGAN3](https://github.com/NVlabs/stylegan3)**.
+CTL-GAN applies collaborative transfer learning to the StyleGAN3 architecture.
+[Method overview and diagrams](docs/method.md) describe the relationship between
+the research workflow and this generation interface.
+
+| Model option | Meaning | Output |
+|---|---|---|
+| `--hospital smc` | Generator trained on the SMC dataset | Synthetic SMC-domain images |
+| `--hospital sysu` | Generator adapted from SMC weights using SYSU data | Synthetic SYSU-domain images |
+| `--grade 0` … `--grade 5` | Requested Oxford grading condition | One-hot class conditioning |
+
+These are **generated images**, not photographs retrieved from a hospital. The
+requested grade is a conditioning label, not an independently verified clinical
+grade. SYSU refers to the research dataset associated with Sun Yat-sen University,
+not a live connection to a hospital.
 
 ## Research scope
 
@@ -186,7 +202,8 @@ networks (CTL-GAN) for classification of dry eye disease.** *Scientific Reports*
 Published 20 October 2026.
 
 Please also cite **Karras et al., Alias-Free Generative Adversarial Networks,
-NeurIPS 2021 (StyleGAN3)** when using the generator. Both entries are provided in
+NeurIPS 2021 (StyleGAN3)** when using the generator. The paper entries, together
+with the original StyleGAN truncation reference, are provided in
 [`CITATION.bib`](CITATION.bib), and GitHub's “Cite this repository” uses
 [`CITATION.cff`](CITATION.cff).
 

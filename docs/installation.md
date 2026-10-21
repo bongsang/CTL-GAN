@@ -44,12 +44,12 @@ supported level; it need not equal the PyTorch runtime version.
 
 The installer requires several GB for PyTorch and GPU libraries. Models are
 fetched separately and verified by SHA-256. The process generates one image at
-a time, keeping memory requirements independent of `--num`. See the measured
+a time, keeping memory requirements independent of `--count`. See the measured
 hardware in [validation.md](validation.md). Lower-memory GPUs have not been tested.
 
 ## CPU, Windows, and macOS
 
-- **CPU:** `--device cpu --num 1` uses the same reference operators. It is slower;
+- **CPU:** `--device cpu --count 1` uses the same reference operators. It is slower;
   start with one image. On Linux, the default environment still installs the
   GPU-capable PyTorch wheel even when generating on CPU.
 - **Windows:** WSL2 with an NVIDIA-compatible host driver is the recommended
@@ -100,7 +100,7 @@ uv run -m maker --hospital sysu --download-only --cache-dir ./models-cache
 Copy that directory to the offline machine after preparing its Python environment:
 
 ```bash
-uv run -m maker --hospital smc --grade 3 --num 1 --offline --cache-dir ./models-cache
+uv run -m maker --hospital smc --grade 3 --count 1 --offline --cache-dir ./models-cache
 ```
 
 Model cache precedence is `--cache-dir`, then `CTL_GAN_CACHE`, then

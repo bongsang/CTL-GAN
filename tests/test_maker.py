@@ -13,18 +13,24 @@ from maker.models import MakerError, ensure_model, verify
 
 class ArgumentsTest(unittest.TestCase):
     def test_requested_command(self):
-        args = parser().parse_args(["--hospital", "smc", "--grade", "3", "--num", "100"])
-        self.assertEqual((args.hospital, args.grade, args.num, args.seed, args.impl), ("smc", 3, 100, 0, "ref"))
+        args = parser().parse_args(["--hospital", "smc", "--grade", "3", "--count", "100"])
+        self.assertEqual((args.hospital, args.grade, args.count, args.seed, args.impl), ("smc", 3, 100, 0, "ref"))
+
+    def test_truncation_values(self):
+        for value in (0, 0.7, 1, 2):
+            with self.subTest(value=value):
+                self.assertEqual(parser().parse_args(["--trunc", str(value)]).trunc, value)
+        self.assertEqual(parser().parse_args([]).trunc, 1.0)
 
     def test_invalid_conditions(self):
-        for options in (["--grade", "6"], ["--grade", "-1"], ["--num", "0"], ["--num", "10001"], ["--seed", "-1"], ["--trunc", "nan"], ["--trunc", "inf"], ["--hospital", "unknown"]):
+        for options in (["--grade", "6"], ["--grade", "-1"], ["--count", "0"], ["--count", "10001"], ["--seed", "-1"], ["--trunc", "nan"], ["--trunc", "inf"], ["--trunc", "-0.1"], ["--trunc", "2.1"], ["--num", "1"], ["--hospital", "unknown"]):
             with self.subTest(options=options), contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                 parser().parse_args(options)
 
     @patch("maker.__main__.registry", return_value={"models": {}})
     def test_seed_range_overflow(self, _):
         with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
-            main(["--hospital", "smc", "--grade", "0", "--seed", "4294967295", "--num", "2"])
+            main(["--hospital", "smc", "--grade", "0", "--seed", "4294967295", "--count", "2"])
 
     @patch("maker.__main__.registry", return_value={"models": {}})
     def test_existing_output_is_preserved(self, _):
