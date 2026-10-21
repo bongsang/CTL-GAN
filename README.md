@@ -6,14 +6,13 @@
 
 Generate **512 × 512 synthetic fluorescein-stained anterior segment images**,
 conditioned on an SMC or SYSU model and an Oxford grade from 0 to 5.
-Choose a model, choose a grade, and generate your own images with reproducible seeds.
+The released SMC and SYSU weights support reproducible generation from random seeds.
 
 **Watch the generator in action · 8-second demo**
 
 https://github.com/user-attachments/assets/b12eecfa-55cf-4b7d-bfc0-bede2c17b3bf
 
 [Watch or download the original MP4](docs/media/generating.mp4)
-
 
 **From random numbers to a synthetic eye image.** A seed produces a random latent
 vector—a list of numbers. Together with the requested Oxford grade, it passes
@@ -45,19 +44,19 @@ uv run -m maker --hospital smc --grade 3 --num 100
 ```
 
 **[Paper](https://www.nature.com/articles/s41598-026-76373-4)** ·
-**[한국어 안내](docs/README.ko.md)** · **[Model details](docs/models.md)** ·
+**[Model details](docs/models.md)** ·
 **[Installation & troubleshooting](docs/installation.md)** · **[Citations](CITATION.bib)**
 
 > **Ready to generate:** [SMC and SYSU model weights](https://github.com/bongsang/CTL-GAN/releases/tag/models-v1)
 > download automatically on first use (about 96 MiB per model), then stay cached.
 > No training data or bulk image download is required.
 
-## What this repository does
+## Overview
 
 CTL-GAN transfers a StyleGAN3 generator trained on Samsung Medical Center (SMC)
 images and adapts it using the Sun Yat-sen University (SYSU) dataset. This repository
 provides a small inference interface around **[NVIDIA's StyleGAN3](https://github.com/NVlabs/stylegan3)**.
-The underlying GAN algorithm is StyleGAN3, not a new GAN architecture.
+CTL-GAN applies collaborative transfer learning to the StyleGAN3 architecture.
 
 | Model option | Meaning | Output |
 |---|---|---|
@@ -102,7 +101,7 @@ uses NVIDIA's reference operators on that device, so **no CUDA toolkit, nvcc, or
 C++ compiler is needed for the default inference path**. The first environment
 installation downloads PyTorch and its runtime libraries and can take several minutes.
 
-### Find your results
+### Output
 
 Each command creates a separate directory under `outputs/<hospital>/grade-<n>/`:
 
@@ -152,10 +151,10 @@ For the upstream compiled CUDA operators, use `--impl cuda` only after installin
 a CUDA toolkit that matches the PyTorch CUDA runtime and a compatible compiler.
 The reference path is the supported starting point; see [compatibility details](docs/installation.md).
 
-## Existing examples
+## Example images
 
-The repository already contains 1,200 synthetic examples (100 per grade per model).
-They are retained in [`dataset/smc-gen-ai-images`](dataset/smc-gen-ai-images) and
+The repository includes 1,200 synthetic examples (100 per grade per model) in
+[`dataset/smc-gen-ai-images`](dataset/smc-gen-ai-images) and
 [`dataset/sysu-gen-ai-images`](dataset/sysu-gen-ai-images). No additional bulk image
 dataset is required for generation. Model weights are cached outside Git.
 
@@ -163,9 +162,8 @@ dataset is required for generation. Model weights are cached outside Git.
 |---|---|
 | ![Previously published synthetic SMC grade-3 example](dataset/smc-gen-ai-images/3/seed0000.png) | ![Previously published synthetic SYSU grade-3 example](dataset/sysu-gen-ai-images/3/seed0000.png) |
 
-These are existing repository examples, not a claim that a fresh execution has
-reproduced the historical sample byte for byte. See the validation record in
-[models.md](docs/models.md).
+Numerical comparisons between these examples and current generator outputs are
+reported in the [validation record](docs/validation.md).
 
 ## Research scope
 

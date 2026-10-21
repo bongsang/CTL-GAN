@@ -2,16 +2,14 @@
 
 [Watch or download the original MP4](generating.mp4)
 
-The author supplied this short visualization of synthetic eye images for the
-CTL-GAN repository introduction. The original video is preserved without edits.
-It provides a visual introduction to the generator’s synthetic eye images.
+This eight-second demonstration shows a grid of synthetic eye images changing
+over time. The diagram below describes the computation that produces an
+individual image.
 
 ## How StyleGAN3 creates an image
 
-A useful way to read this demonstration is to connect the changing images to the
-learned function that produces them. In CTL-GAN's maker, that function is a
-conditional StyleGAN3 generator: **image = G(z, c)**, where `z` is a random latent
-vector, `c` is the requested Oxford grade, and the hospital option selects the
+CTL-GAN uses a conditional StyleGAN3 generator: **image = G(z, c)**, where `z`
+is a random latent vector, `c` is the requested Oxford grade, and the hospital option selects the
 learned generator weights.
 
 1. **Sample random numbers.** A seed initializes a pseudorandom number generator.
@@ -53,13 +51,12 @@ During training, the generator and discriminator are optimized using training
 images. The resulting weights encode learned statistical regularities that can
 be used to synthesize images. At inference, this implementation loads those
 weights and computes pixels from `z` and the condition; it does not retrieve
-training photographs or paste their patches together. That describes this
-StyleGAN3 pipeline, not every system marketed as generative AI.
+training photographs or paste their patches together.
 
-The absence of an image-retrieval step is **not evidence that memorization is
-impossible**. A generator can still reproduce training-specific details. The
+Learned generators can retain training-specific details. The
 [CTL-GAN paper](https://doi.org/10.1038/s41598-026-76373-4) discusses the limits of
-its privacy assessment; this animation is not a privacy test.
+its privacy assessment; image synthesis alone does not establish a formal privacy
+guarantee.
 
 ### Why the StyleGAN3 design matters
 
@@ -72,27 +69,17 @@ Our released checkpoints use **StyleGAN3-T**, the translation-equivariant
 configuration. The eye-image clip is an illustration of generated appearances,
 not a measurement of equivariance or evidence of anatomical correctness.
 
-### What this particular clip shows
+### Interpreting the animation
 
-The supplied eight-second clip presents a grid of synthesized eye images that
-change over time. It does not display the initial latent vectors, label the
-intermediate feature maps, or identify the inputs used for each frame. Its exact
-rendering command and latent trajectory have not been recovered. The explanation
-above describes the verified maker/StyleGAN3 computation; it is not a recovered
-execution trace of this historical MP4.
+The video displays generated outputs. It does not show intermediate feature maps
+or the progression of one image through the network. The original rendering
+parameters and latent trajectory are undocumented.
 
-For comparison, NVIDIA's official [`gen_video.py`](https://github.com/NVlabs/stylegan3/blob/c233a919a6faee6e36a316ddd4eddababad1adf9/gen_video.py)
-creates animations by interpolating style codes and running the synthesis network
-for every frame. In such an animation, each frame is a complete generated image;
-time traverses the latent space rather than the layers of one forward pass.
-Visual similarity alone does not establish that this clip used that exact script.
-StyleGAN3's generation pathway should also be distinguished from iterative
-pixel-noise removal in a diffusion model.
-
-The educational value of the clip is that viewers can see changing synthetic
-appearances while the diagram explains how a learned generator computes images
-from numerical inputs. Directly visualizing internal activations would require a
-separately recorded and labeled layer-by-layer demonstration.
+NVIDIA's official [`gen_video.py`](https://github.com/NVlabs/stylegan3/blob/c233a919a6faee6e36a316ddd4eddababad1adf9/gen_video.py)
+illustrates latent-space animation by interpolating style codes and evaluating the
+synthesis network for each frame. Each frame is a complete generated image.
+StyleGAN3 produces images through a forward pass, rather than the iterative
+pixel-noise denoising sequence used in diffusion sampling.
 
 ## Permission
 
@@ -106,18 +93,15 @@ Kim, B., Won, Y. K., Kim, H., Cha, J., Lim, D. H., & Jeon, J. (2026).
 networks (CTL-GAN) for classification of dry eye disease.* Scientific Reports.
 [https://doi.org/10.1038/s41598-026-76373-4](https://doi.org/10.1038/s41598-026-76373-4)
 
-Suggested credit: “CTL-GAN generation demonstration video © Bongsang Kim;
+Attribution: “CTL-GAN generation demonstration video © Bongsang Kim;
 Kim et al., Scientific Reports (2026), doi:10.1038/s41598-026-76373-4.”
 
 This permission applies to **this video**. It does not replace the
 [NVIDIA StyleGAN3 license](../../LICENSE.txt) governing the software and model
-use. The copyright and reuse terms above were supplied by the author on
-2026-10-21.
+use.
 
-## File provenance
+## Video specifications
 
-- Source: author-provided `generating.mp4`, received from the author's local archive
-  on 2026-10-21. This is the registration date, not a claim about the creation date.
 - Original filename: `generating.mp4`.
 - Duration: approximately 8.04 seconds.
 - Video: H.264, 512 × 256, 24 frames per second; original AAC audio retained.

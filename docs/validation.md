@@ -36,7 +36,7 @@ verification and initialization**. The single SYSU CPU generation loop took
 performance guarantee or a formal benchmark.
 
 The two original training pickles were used only for local maintainer validation.
-They are not part of the public inference path or Git changes.
+The public inference path uses the exported safetensors files.
 
 ## Existing public examples
 
@@ -54,10 +54,10 @@ examples were compared to fresh output. Mean absolute pixel differences on the
 | 5 | 0.0606 | 0.0400 |
 
 Maximum single-channel differences were 3/255 for SMC and 2/255 for SYSU.
-This is strong numerical correspondence with these selected public examples,
-but **not byte-identical historical reproduction**. The historical runtime and
-precision for those examples are not proven by this comparison. Do not attribute
-all remaining differences to one cause without further testing.
+The selected examples show close numerical agreement, although the outputs are
+not byte-identical. The historical runtime and numerical precision for these
+examples are undocumented, and the source of the remaining differences has not
+been isolated.
 
 The full per-grade comparison is available in
 [`generator-validation.json`](generator-validation.json). This does not establish
@@ -75,7 +75,8 @@ uv run -m maker --hospital sysu --grade 2 --num 1 --device cpu --outdir outputs/
 
 Model files must first be available as described in [models.md](models.md).
 Choose new output directories on subsequent runs. CI runs the standard-library
-CLI/control-plane tests; it does not download hospital models or claim GPU tests.
+CLI and model-download logic tests without downloading hospital models or
+running GPU inference.
 
 Not validated: native Windows, macOS, MPS, compiled CUDA extensions, other GPU
 architectures, training in this environment, clinical label correctness, formal
