@@ -197,7 +197,7 @@ included in model downloads. See the paper for dataset access conditions.
 
 Bongsang Kim, Yeo Kyoung Won, Hokyun Kim, Jiho Cha, Dong Hui Lim, and Jooyoung Jeon.
 **Privacy-preserving collaborative transfer learning with generative adversarial
-networks (CTL-GAN) for classification of dry eye disease.** *Scientific Reports*
+networks (CTL-GAN) for classification of dry eye disease.** *Nature Scientific Reports*
 (2026). [doi:10.1038/s41598-026-76373-4](https://doi.org/10.1038/s41598-026-76373-4).
 Published 20 October 2026.
 
