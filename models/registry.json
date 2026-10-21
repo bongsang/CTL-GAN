@@ -25,8 +25,8 @@
       "source_code_matches_vendored_generator": true,
       "all_tensors_equal_after_reconstruction": true,
       "label": "Samsung Medical Center source generator",
-      "status": "prepared_pending_author_confirmation",
-      "url": null
+      "status": "released",
+      "url": "https://github.com/bongsang/CTL-GAN/releases/download/models-v1/ctlgan-smc-v1.safetensors"
     },
     "sysu": {
       "id": "ctlgan-sysu-v1",
@@ -51,8 +51,13 @@
       "source_code_matches_vendored_generator": true,
       "all_tensors_equal_after_reconstruction": true,
       "label": "SYSU-adapted generator",
-      "status": "prepared_pending_author_confirmation",
-      "url": null
+      "status": "released",
+      "url": "https://github.com/bongsang/CTL-GAN/releases/download/models-v1/ctlgan-sysu-v1.safetensors"
     }
+  },
+  "release": {
+    "tag": "models-v1",
+    "date": "2026-10-21",
+    "scope": "Inference demonstration models selected from preserved checkpoints; not a claim of exact reproduction of every published experiment."
   }
 }

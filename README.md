@@ -16,11 +16,9 @@ uv run -m maker --hospital smc --grade 3 --num 100
 **[한국어 안내](docs/README.ko.md)** · **[Model details](docs/models.md)** ·
 **[Installation & troubleshooting](docs/installation.md)** · **[Citations](CITATION.bib)**
 
-> **Model release status:** the CLI is implemented; public model downloads await
-> author confirmation of the two prepared checkpoint exports. Until release,
-> generation requires the verified model files in a local cache. See
-> [model availability](docs/models.md). The command does not substitute an
-> unrelated pretrained model when a CTL-GAN model is unavailable.
+> **Ready to generate:** [SMC and SYSU model weights](https://github.com/bongsang/CTL-GAN/releases/tag/models-v1)
+> download automatically on first use (about 96 MiB per model), then stay cached.
+> No training data or bulk image download is required.
 
 ## What this repository does
 
@@ -57,7 +55,7 @@ available for a small trial. Windows/WSL2 and macOS notes are in the
    uv run -m maker --doctor
    ```
 
-3. Make the model available as described in [models.md](docs/models.md), then run:
+3. Generate images (the selected model downloads automatically on first use):
 
    ```bash
    # 100 SMC-domain images, Oxford grade 3, seeds 0–99
@@ -104,7 +102,7 @@ uv run -m maker --hospital sysu --grade 4 --num 20 --seed 200 --outdir outputs/m
 # Explore truncation (changes the sampling distribution)
 uv run -m maker --hospital smc --grade 3 --num 4 --trunc 0.7
 
-# Verify/download a model without generating images (once weights are released)
+# Download and verify a model without generating images
 uv run -m maker --hospital smc --download-only
 
 # Use a pre-populated cache with networking disabled

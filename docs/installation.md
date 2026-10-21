@@ -80,7 +80,7 @@ explicitly listed in the validation record.
 | Symptom | Action |
 |---|---|
 | Wrong Python / unsupported wheel | Run from the repository root; `uv python install 3.10.21`, then `uv sync --locked` |
-| `Public weights are not yet released` | See [models.md](models.md); code installation alone cannot supply unreleased weights |
+| Model download fails | Check connectivity to GitHub Releases; use the manual download in [models.md](models.md) |
 | CUDA unavailable | Check `nvidia-smi` and `uv run -m maker --doctor`; try `--device cpu` |
 | `nvcc` / extension build failure | Use the default `--impl ref`, or install the matching toolkit and compiler |
 | `pkg_resources` missing | Restore the locked environment with `uv sync --locked` |
@@ -92,7 +92,7 @@ explicitly listed in the validation record.
 
 ## Offline use
 
-On a connected machine, download each required model (when released):
+On a connected machine, download each required model:
 
 ```bash
 uv run -m maker --hospital smc --download-only --cache-dir ./models-cache

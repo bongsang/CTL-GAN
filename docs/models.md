@@ -2,24 +2,34 @@
 
 ## Availability
 
-Two generator-only exports have been prepared locally. **They are not yet public
-release assets.** The registry deliberately has `url: null` until the author
-confirms the selected checkpoints and their public release. Installation alone
-therefore does not enable first-time generation yet.
+The **[models-v1 release](https://github.com/bongsang/CTL-GAN/releases/tag/models-v1)**
+provides the SMC and SYSU generator-only weights. They were selected for this
+public generation experience on 2026-10-21 under the author's authorization.
+The model provenance and validation scope below distinguish this demonstration
+from a complete reproduction of the paper's experiments.
 
-For a prepared local export, put both `.safetensors` files in a cache directory:
+`maker` automatically downloads the selected model on first use, caches it, and
+verifies its size and SHA-256 before every load. It uses safetensors; the public
+CLI never deserializes pickle. No clinical source photographs, discriminator,
+optimizer, training dataset paths, or embedded checkpoint source code are included
+in these tensor files.
+
+| Model | Direct download |
+|---|---|
+| SMC | [ctlgan-smc-v1.safetensors](https://github.com/bongsang/CTL-GAN/releases/download/models-v1/ctlgan-smc-v1.safetensors) |
+| SYSU | [ctlgan-sysu-v1.safetensors](https://github.com/bongsang/CTL-GAN/releases/download/models-v1/ctlgan-sysu-v1.safetensors) |
+
+For manual or offline installation, download the required file into a directory:
 
 ```bash
 uv run -m maker --hospital smc --grade 3 --num 1 --cache-dir /path/to/models --offline
 ```
 
-Once published, release assets will be hosted separately from Git and downloaded
-on demand. `maker` verifies the file size and SHA-256 before loading, including
-on cached runs. It uses safetensors; the public CLI never deserializes pickle.
-No clinical source photographs, discriminator, optimizer, training dataset paths,
-or embedded checkpoint source code are included in these tensor files.
+The release also includes provenance JSON, `SHA256SUMS`, and the NVIDIA license.
+Weights are hosted separately from Git; each release uses immutable filenames
+and registered hashes. Do not rename a different model to match these filenames.
 
-## Prepared artifacts
+## Released artifacts
 
 Both are six-class, 512×512 RGB StyleGAN3-T `G_ema` generators (latent dimension
 512). They contain 116 named parameters/buffers and **100,578,252 bytes each**
@@ -33,9 +43,9 @@ Both are six-class, 512×512 RGB StyleGAN3-T `G_ema` generators (latent dimensio
 
 The retained SYSU generation command explicitly selects run 00006 / snapshot
 000900, classes 0–5, seeds 0–999, and truncation 1. Its training configuration
-resumes from the SMC snapshot 025000. These are evidence-backed **candidate demo
+resumes from the SMC snapshot 025000. These are evidence-backed **demonstration
 models**; that evidence alone does not establish that every final paper image or
-reported metric came from these exact checkpoint bytes. Author confirmation and
+reported metric came from these exact checkpoint bytes. Selection for public demonstration and
 verification against the complete historical image pool are separate matters.
 The numeric checkpoint suffixes are training image counts in thousands (`kimg`),
 not epochs.
