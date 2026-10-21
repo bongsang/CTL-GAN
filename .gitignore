@@ -169,3 +169,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Generated images, model downloads and local verification artifacts
+/outputs/
+/artifacts/
+/models/*.safetensors
+/models/*.pkl
+*.pkl

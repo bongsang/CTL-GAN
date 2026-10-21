@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "stylegan3_commit": "c233a919a6faee6e36a316ddd4eddababad1adf9",
+  "models": {
+    "smc": {
+      "id": "ctlgan-smc-v1",
+      "filename": "ctlgan-smc-v1.safetensors",
+      "sha256": "10fce586c6a5dbf64738158d04f9a9a84d37329747027112488d7398bbc7fb06",
+      "bytes": 100578252,
+      "generator_kwargs": {
+        "z_dim": 512,
+        "w_dim": 512,
+        "mapping_kwargs": {
+          "num_layers": 2
+        },
+        "channel_base": 32768,
+        "channel_max": 512,
+        "magnitude_ema_beta": 0.9994456359721023,
+        "c_dim": 6,
+        "img_resolution": 512,
+        "img_channels": 3
+      },
+      "source_checkpoint_sha256": "31c7daa166482c1b1d35b82e6d96721d81f51ddd01ef309ddf6eaf71375c60f2",
+      "tensor_count": 116,
+      "source_code_matches_vendored_generator": true,
+      "all_tensors_equal_after_reconstruction": true,
+      "label": "Samsung Medical Center source generator",
+      "status": "prepared_pending_author_confirmation",
+      "url": null
+    },
+    "sysu": {
+      "id": "ctlgan-sysu-v1",
+      "filename": "ctlgan-sysu-v1.safetensors",
+      "sha256": "7175bf28df87a602f3e655c96eda3163c72266d29050a91ad669ad4161583ef6",
+      "bytes": 100578252,
+      "generator_kwargs": {
+        "z_dim": 512,
+        "w_dim": 512,
+        "mapping_kwargs": {
+          "num_layers": 2
+        },
+        "channel_base": 32768,
+        "channel_max": 512,
+        "magnitude_ema_beta": 0.9997227795604651,
+        "c_dim": 6,
+        "img_resolution": 512,
+        "img_channels": 3
+      },
+      "source_checkpoint_sha256": "a91d4e099ff53294cec878c59443f9611fcdc5322de5d2d0c2af6b65b9137aeb",
+      "tensor_count": 116,
+      "source_code_matches_vendored_generator": true,
+      "all_tensors_equal_after_reconstruction": true,
+      "label": "SYSU-adapted generator",
+      "status": "prepared_pending_author_confirmation",
+      "url": null
+    }
+  }
+}
