@@ -26,3 +26,6 @@ specify the scope and provenance of each downloadable artifact.
 `maker/runtime.py` selects NVIDIA's existing reference implementations at runtime
 when `--impl ref` is used, restoring the original functions afterwards. It does
 not replace the generator architecture or change its learned tensors.
+
+The author-provided demonstration video `docs/media/generating.mp4` is
+copyright Bongsang Kim and has separate [credit-and-citation reuse permission](docs/media/README.md).
