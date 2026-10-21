@@ -25,6 +25,9 @@ reproduction of the paper's classifier results or a clinical quality evaluation.
 | SYSU, grade 3, seeds 0–1 | Two valid PNGs and complete manifest |
 | CPU: SYSU, grade 2, seed 0 | One valid PNG and complete manifest |
 | Ordinary CLI, download and manifest tests | 13 passed |
+| Public Release download from an empty cache | Both models downloaded without GitHub authentication and passed size/SHA-256 verification |
+| Inference with publicly downloaded weights | SMC: 3 PNGs; SYSU: 1 PNG; complete manifests; SMC seed-0 PNG equals the local-export PNG |
+| GitHub Actions | Locked dependency resolution, 13 tests, CLI help/model list and CFF schema validation passed |
 
 The 100-image SMC loop took **18.316 seconds** on this RTX 4090, including PNG
 and manifest writes, **excluding environment installation, model download,
