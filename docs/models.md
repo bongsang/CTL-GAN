@@ -3,10 +3,8 @@
 ## Availability
 
 The **[models-v1 release](https://github.com/bongsang/CTL-GAN/releases/tag/models-v1)**
-provides the SMC and SYSU generator-only weights. They were selected for this
-public generation experience on 2026-10-21 under the author's authorization.
-The model provenance and validation scope below distinguish this demonstration
-from a complete reproduction of the paper's experiments.
+provides SMC and SYSU generator weights for conditional image synthesis.
+Checkpoint provenance and inference validation are documented below.
 
 `maker` automatically downloads the selected model on first use, caches it, and
 verifies its size and SHA-256 before every load. It uses safetensors; the public
@@ -36,17 +34,16 @@ Both are six-class, 512×512 RGB StyleGAN3-T `G_ema` generators (latent dimensio
 (about 95.9 MiB). Architecture settings and full hashes are in
 [`models/registry.json`](../models/registry.json).
 
-| Model | Historical checkpoint candidate | SHA-256 of safetensors |
+| Model | Source checkpoint | SHA-256 of safetensors |
 |---|---|---|
 | `ctlgan-smc-v1` | SMC `network-snapshot-025000.pkl` | `10fce586c6a5dbf64738158d04f9a9a84d37329747027112488d7398bbc7fb06` |
 | `ctlgan-sysu-v1` | SYSU run `00006`, `network-snapshot-000900.pkl` | `7175bf28df87a602f3e655c96eda3163c72266d29050a91ad669ad4161583ef6` |
 
 The retained SYSU generation command explicitly selects run 00006 / snapshot
 000900, classes 0–5, seeds 0–999, and truncation 1. Its training configuration
-resumes from the SMC snapshot 025000. These are evidence-backed **demonstration
-models**; that evidence alone does not establish that every final paper image or
-reported metric came from these exact checkpoint bytes. Selection for public demonstration and
-verification against the complete historical image pool are separate matters.
+resumes from the SMC snapshot 025000. The released weights support the generation
+interface. Their correspondence with every image and quantitative result in the
+paper has not been established.
 The numeric checkpoint suffixes are training image counts in thousands (`kimg`),
 not epochs.
 
@@ -67,23 +64,3 @@ These models are intended for non-commercial research/evaluation under the
 [StyleGAN3 license](../LICENSE.txt). The downloadable artifacts are generated
 from StyleGAN3 model checkpoints; the article's Creative Commons license does
 not supersede the software terms.
-
-## Maintainer export procedure
-
-Use only a checkpoint that the maintainer already trusts: pickle loading can
-execute code. The public inference command never needs this step.
-
-```bash
-uv run scripts/export_generator.py \
-  --hospital smc \
-  --checkpoint /absolute/path/to/network-snapshot-025000.pkl \
-  --output-dir artifacts/models \
-  --trust-pickle
-```
-
-The exporter reads the original without modifying it, rejects a generator with
-a different embedded implementation, reconstructs the generator, checks every
-tensor, and writes safetensors plus a provenance JSON. Before publishing a new
-version, validate actual generation, assign a new model ID/filename, register
-its hash and architecture, and publish immutable release assets. Never silently
-replace an existing model version. The command refuses to overwrite exports.

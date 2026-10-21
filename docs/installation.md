@@ -7,7 +7,7 @@ its original `environment.yml` with today's newest Python/PyTorch/NumPy is not a
 reliable inference setup. In particular, the old operators and serialized models
 have assumptions that newer libraries can break.
 
-This reader-facing inference environment deliberately uses:
+The inference environment uses the following pinned dependencies:
 
 | Component | Pinned version | Reason |
 |---|---|---|
@@ -19,11 +19,11 @@ This reader-facing inference environment deliberately uses:
 | setuptools | 75.8.2 | Retains `pkg_resources`, imported by upstream operators |
 | safetensors | 0.4.5 | Non-executable tensor storage for public models |
 
-`uv.lock` pins transitive dependencies and artifact hashes. This is a newly
-validated **inference environment**, not a claim about the exact historical
-training environment. Keep the supplied lockfile. Do not run a blanket dependency
-upgrade. The inherited `environment.yml` is upstream historical configuration,
-not the maker installation entrypoint.
+`uv.lock` pins transitive dependencies and artifact hashes for the validated
+inference environment. Install with `uv sync --locked` to retain these versions.
+The upstream `environment.yml` records the original StyleGAN3 configuration;
+the maker environment is validated for inference and does not reconstruct the
+historical CTL-GAN training environment.
 
 ## Linux / NVIDIA GPU
 
@@ -45,8 +45,7 @@ supported level; it need not equal the PyTorch runtime version.
 The installer requires several GB for PyTorch and GPU libraries. Models are
 fetched separately and verified by SHA-256. The process generates one image at
 a time, keeping memory requirements independent of `--num`. See the measured
-hardware in [validation.md](validation.md); smaller GPU capacity is not claimed
-as tested.
+hardware in [validation.md](validation.md). Lower-memory GPUs have not been tested.
 
 ## CPU, Windows, and macOS
 
@@ -71,9 +70,8 @@ PyTorch. Set `TORCH_EXTENSIONS_DIR` to a writable location if needed.
 
 The default reference implementation bypasses extension compilation. It uses
 PyTorch operations on GPU or CPU and keeps the same learned model weights, but
-may differ numerically from the fused kernels. It is not a speed benchmark of
-StyleGAN3. This release does not claim validation of the compiled path unless
-explicitly listed in the validation record.
+may differ numerically from the fused kernels. The compiled path has not been
+validated for this release.
 
 ## Common problems
 
