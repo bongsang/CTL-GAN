@@ -14,6 +14,28 @@ https://github.com/user-attachments/assets/b12eecfa-55cf-4b7d-bfc0-bede2c17b3bf
 
 [Watch or download the original MP4](docs/media/generating.mp4)
 
+
+**From random numbers to a synthetic eye image.** A seed produces a random latent
+vector—a list of numbers. Together with the requested Oxford grade, it passes
+through a mapping network and a StyleGAN3 synthesis network, which computes the
+image using learned weights. This inference pipeline does not search a photo
+database or assemble retrieved image fragments; it runs without the training
+images. [See the generation pathway and StyleGAN3 references](docs/media/README.md#how-stylegan3-creates-an-image).
+
+The clip makes the variety and continuous changes in synthesized eye images
+visible. It shows generated outputs; the diagram below explains the computation
+behind each image. It is not a recording of intermediate neural-network layers
+or a pixel-noise denoising sequence.
+
+```mermaid
+flowchart LR
+    A["Seed → random latent vector z"] --> B["Mapping network"]
+    C["Oxford grade 0–5"] --> B
+    B --> D["Style codes w"]
+    D --> E["StyleGAN3 synthesis"]
+    E --> F["Synthetic eye image"]
+```
+
 *Copyright © Bongsang Kim. You may use and share this video with author credit and
 [citation of the CTL-GAN paper](https://doi.org/10.1038/s41598-026-76373-4).
 [Video details and permission](docs/media/README.md).*
